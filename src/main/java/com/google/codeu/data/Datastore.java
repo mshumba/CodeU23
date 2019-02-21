@@ -67,8 +67,7 @@ public class Datastore {
             .setFilter(new Query.FilterPredicate("user", FilterOperator.EQUAL, user))
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
-    doTheProcess(false, results,messages, user);
-
+    getMessagesHelper(false, results,messages, user);
 
     return messages;
   }
@@ -79,11 +78,11 @@ public class Datastore {
     Query query = new Query("Message")
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
-    doTheProcess(true,results,messages,"");
+    getMessagesHelper(true,results,messages,"");
 
     return messages;
   }
-  private void doTheProcess(boolean a, PreparedQuery results,List<Message> messages,String user){
+  private void getMessagesHelper(boolean a, PreparedQuery results,List<Message> messages,String user){
 
     for (Entity entity : results.asIterable()) {
       try {
