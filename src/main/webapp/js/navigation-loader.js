@@ -24,6 +24,8 @@ function addLoginOrLogoutLinkToNavigation() {
     console.warn('Navigation element not found!');
     return;
   }
+  navigationElement.appendChild(
+               createListItem(createLink('/feed.html','Public Feed')));
 
   fetch('/login-status')
       .then((response) => {
@@ -40,6 +42,7 @@ function addLoginOrLogoutLinkToNavigation() {
           navigationElement.appendChild(
               createListItem(createLink('/login', 'Login')));
         }
+
       });
 }
 
