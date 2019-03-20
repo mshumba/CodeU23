@@ -18,36 +18,20 @@
  */
   let map;
   function createMap(){
-    map = new google.maps.Map(document.getElementById('map'), {
+    fetch('/resource-data').then(function(response) {
+      return response.json();
+    }).then(function(resources){
+      map = new google.maps.Map(document.getElementById('map'), {
       center: {lat: 40.7295,lng: -73.9965},
       zoom: 14
+      });
+      resources.forEach(function(resource){
+        if(resource.lat != -200){;
+          new google.maps.Marker({
+            map:map,
+            position: {lat: resource.lat, lng: resource.lng}
+          });
+        };
+      });
     });
-    //marker and event for comedy center
-    const comedyCenterMarker = new google.maps.Marker({
-      position: {lat:40.7302,lng: -74.0006},
-      map: map,
-      title: "ComedyCenter"
-    });
-    var comedyCenterInfoWindow = new google.maps.InfoWindow({
-      content:'Famous comedy club where you can curse your life with joy.'
-    });
-    comedyCenterMarker.addListener('click', function() {
-      comedyCenterInfoWindow.open(map, comedyCenterMarker);
-    });
-
-    //marker and event for WAshington Square Park
-    const wspMarker = new google.maps.Marker({
-      position:{lat:40.7308, lng:-73.9973},
-      map:map,
-      title:"Washington Square Park"
-    });
-
-    var wspInfoWindow = new google.maps.InfoWindow({
-      content:"No matter you want to hug a stranger or cry your guts out in the public, this is the best place."
-    });
-    wspMarker.addListener('click',function(){
-      wspInfoWindow.open(map,wspMarker);
-    })
-
-    
-}
+  }
