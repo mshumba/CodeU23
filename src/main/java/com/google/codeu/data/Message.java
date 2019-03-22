@@ -24,6 +24,7 @@ public class Message {
   private UUID id;
   private String user;
   private String text;
+  private String imageUrl;
   private long timestamp;
 
   /**
@@ -31,29 +32,35 @@ public class Message {
    * random ID and uses the current system time for the creation time.
    */
   public Message(String user, String text) {
-    this(UUID.randomUUID(), user, text, System.currentTimeMillis());
+    this(UUID.randomUUID(), user, text, System.currentTimeMillis(),null);
   }
 
-  public Message(UUID id, String user, String text, long timestamp) {
+  public Message(UUID id, String user, String text, long timestamp, String imageUrl) {
     this.id = id;
     this.user = user;
     this.text = text;
     this.timestamp = timestamp;
+    this.imageUrl=imageUrl;
   }
 
   public UUID getId() {
     return id;
   }
-
+  public String toString(){
+    String ret="";
+    ret+="User: "+user+ " text: "+ text;
+    return ret;
+  }
+  public String getImageUrl(){return imageUrl;}
   public String getUser() {
     return user;
   }
-
   public String getText() {
     return text;
   }
-
   public long getTimestamp() {
     return timestamp;
   }
+  public void setImageUrl(String newUrl){this.imageUrl=newUrl;}
+
 }
