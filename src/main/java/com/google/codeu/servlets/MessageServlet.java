@@ -20,16 +20,24 @@ package com.google.codeu.servlets;
 import com.google.appengine.api.blobstore.BlobKey;
 import com.google.appengine.api.blobstore.BlobstoreService;
 import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
 import com.google.appengine.api.images.ServingUrlOptions;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
+import com.google.appengine.repackaged.com.fasterxml.jackson.core.JsonFactory;
 import com.google.cloud.vision.v1.*;
 import com.google.codeu.data.Datastore;
 import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
+
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,8 +46,11 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.protobuf.Type;
 import org.jsoup.Jsoup;
 import java.io.*;
+
 import java.util.stream.Collectors;
 
 
@@ -156,7 +167,8 @@ public class MessageServlet extends HttpServlet {
   }
   private String getImageLabels(byte[] imgBytes) throws IOException {
     ByteString byteString = ByteString.copyFrom(imgBytes);
-    Image image = Image.newBuilder().setContent(byteString).build();
+    com.google.cloud.vision.v1.Image image=com.google.cloud.vision.v1.Image.newBuilder().setContent(byteString).build();
+
 
     Feature feature = Feature.newBuilder().setType(Feature.Type.LABEL_DETECTION).build();
     AnnotateImageRequest request =
