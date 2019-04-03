@@ -17,9 +17,7 @@
 package com.google.codeu.servlets;
 
 
-import com.google.appengine.api.blobstore.BlobKey;
-import com.google.appengine.api.blobstore.BlobstoreService;
-import com.google.appengine.api.blobstore.BlobstoreServiceFactory;
+import com.google.appengine.api.blobstore.*;
 import com.google.appengine.api.images.Image;
 import com.google.appengine.api.images.ImagesService;
 import com.google.appengine.api.images.ImagesServiceFactory;
@@ -103,9 +101,14 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
 
+  /*  BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
+    List<BlobKey> blobKeys = blobs.get("image");
+*/
     BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
     Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
     List<BlobKey> blobKeys = blobs.get("image");
+
 
     String userText = Jsoup.clean(request.getParameter("text"), Whitelist.none());
 
@@ -118,13 +121,18 @@ public class MessageServlet extends HttpServlet {
 
     if(blobKeys != null && !blobKeys.isEmpty()) {
       BlobKey blobKey = blobKeys.get(0);
-      ImagesService imagesService = ImagesServiceFactory.getImagesService();
-      ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
-      String imageUrl = imagesService.getServingUrl(options);
-      message.setImageUrl(imageUrl);
-      byte[] blobBytes = getBlobBytes(blobstoreService, blobKey);
-      String imageLabels = getImageLabels(blobBytes);
-      message.setImageLabels(imageLabels);
+
+      final BlobInfo blobInfo = new BlobInfoFactory().loadBlobInfo(blobKey);
+      long size = blobInfo.getSize();
+      if(size > 0){
+        ImagesService imagesService = ImagesServiceFactory.getImagesService();
+        ServingUrlOptions options = ServingUrlOptions.Builder.withBlobKey(blobKey);
+        String imageUrl = imagesService.getServingUrl(options);
+        message.setImageUrl(imageUrl);
+      } else {
+        blobstoreService.delete(blobKey);
+      }
+
       datastore.storeMessage(message);
       response.sendRedirect("/user-page.html?user=" + user);
       return;
