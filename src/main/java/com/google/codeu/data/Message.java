@@ -16,6 +16,8 @@
 
 package com.google.codeu.data;
 
+
+import java.util.ArrayList;
 import java.util.UUID;
 
 /** A single message posted by a user. */
@@ -27,14 +29,20 @@ public class Message {
   private String imageUrl;
   private String imageLabels;
   private long timestamp;
-
+  private ArrayList<SubMessage> children = new ArrayList<SubMessage>();
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
    */
+
   public Message(String user, String text) {
     this(UUID.randomUUID(), user, text, System.currentTimeMillis(),null,null);
   }
+  /*Please dont use this constructor it is bad.*/
+  public Message(){
+    this("TestUser","Hey");
+  }
+
 
   public Message(UUID id, String user, String text, long timestamp, String imageUrl, String imageLabels) {
     this.id = id;
@@ -57,6 +65,9 @@ public class Message {
   public String getImageUrl(){return imageUrl;}
   public String getUser() {
     return user;
+  }
+  public void addChild(SubMessage child){
+    children.add(child);
   }
   public String getText() {
     return text;
