@@ -29,7 +29,6 @@ public class Message {
   private String imageUrl;
   private String imageLabels;
   private long timestamp;
-  private ArrayList<SubMessage> children = new ArrayList<SubMessage>();
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
@@ -65,9 +64,6 @@ public class Message {
   public String getImageUrl(){return imageUrl;}
   public String getUser() {
     return user;
-  }
-  public void addChild(SubMessage child){
-    children.add(child);
   }
   public String getText() {
     return text;

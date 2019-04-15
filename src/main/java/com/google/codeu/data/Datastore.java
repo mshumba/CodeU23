@@ -53,9 +53,7 @@ public class Datastore {
 
     datastore.put(messageEntity);
   }
-  public void storeSubMessage(SubMessage sub){
 
-  }
   public int getTotalMessageCount(){
     Query query = new Query("Message");
     PreparedQuery results = datastore.prepare(query);
