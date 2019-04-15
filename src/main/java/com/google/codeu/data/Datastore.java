@@ -135,4 +135,17 @@ public class Datastore {
     markerEntity.setProperty("content", marker.getContent());
     datastore.put(markerEntity);
   }
+
+  //for log in
+  //return user identified by the user name. User name is unique throught out the whole site
+  public boolean checkUserNameExist(String userName){
+    Query q = new Query("User").setFilter(new Query.FilterPredicate("userName", FilterOperator.EQUAL, userName));
+    PreparedQuery results = datastore.prepare(query);
+    if(results.countEntities(FetchOptions.Builder.withLimit(1000)) > 0){
+      return true;
+    };
+    else{
+      return false;
+    }
+  }
 }

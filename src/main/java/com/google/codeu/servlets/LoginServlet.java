@@ -43,6 +43,7 @@ public class LoginServlet extends HttpServlet {
       return;
     }
 
+    //if the user s not logged in
     // Redirect to Google login page. That page will then redirect back to /login,
     // which will be handled by the above if statement.
     String googleLoginUrl = userService.createLoginURL("/login");

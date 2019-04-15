@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/main.css">
+  <meta name="google-signin-client_id" content="550598076096-aspc8bn67u9mise7behih94dff9t1tar.apps.googleusercontent.com">
+  <script src='./js/sign-up-loader.js'></script>
+  <title> Log in</title>
+</head>
+<body>
+  <form action='/signup' method='POST'>
+    <lable> User Name: </lable>
+    <input type = 'text' name='userName'/>
+    <lable>Birthday: </lable>
+    <input type = 'date' name='birthday'/>
+    <lable>Gender: </lable>
+    <input type = 'text' name='gender'/>
+    <lable>Description: </lable>
+    <textbox name='description'/>
+    <input type='submit' />
+  </form>
+<div class="g-signin2" data-onsuccess="onSignUp"></div>
+</body>
