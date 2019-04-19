@@ -68,7 +68,6 @@ public class Datastore {
             .addSort("timestamp", SortDirection.DESCENDING);
     PreparedQuery results = datastore.prepare(query);
     getMessagesHelper(false, results,messages, user);
-
     return messages;
   }
 
