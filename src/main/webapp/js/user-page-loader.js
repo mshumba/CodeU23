@@ -63,10 +63,23 @@ function fetchMessages() {
         messages.forEach((message) => {
           const messageDiv = buildMessageDiv(message);
           messagesContainer.appendChild(messageDiv);
+
         });
       });
 }
 
+
+function buildResponseDiv(){
+/*
+<label>Reply:</label>
+<input type="text" ng-model="yourMessage" placeholder="Reply to the above message" id="replyBox">
+<br>
+Add an image to your response:
+<input type="file" name="image">
+<br>
+<input type="submit" value="Reply" onclick="msg()">
+*/
+}
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -94,8 +107,17 @@ if(message.imageLabels){
   bodyDiv.innerHTML += '<br/>';
   bodyDiv.innerHTML += message.imageLabels;
 }
+    const responseDiv = document.createElement('div');
+    responseDiv.classList.add('response-div');
+    responseDiv.innerHTML+= '<div ng-app="">';
+        responseDiv.innerHTML+='<hr>'
+        responseDiv.innerHTML+='<b>New Message</b><br/>';
+        responseDiv.innerHTML+='<input ng-model="Comment" Style="width:40%;display:inline-block;" class="form-control" placeholder="Write Your Name.. " />';
+        responseDiv.innerHTML+='<button class="btn btn-danger">Add Comment</button>';
+      messageDiv.appendChild(responseDiv);
   return messageDiv;
 }
+
 
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
@@ -117,6 +139,12 @@ function showMessageFormIfViewingSelf() {
           fetchImageUploadUrlAndShowForm();
         }
       });
+      reply_message();
+}
+
+function reply_message(id, sender){
+    console.log('Message id: '+id);
+    console.log('Reply to: '+sender);
 }
 
 function fetchImageUploadUrlAndShowForm() {
@@ -129,4 +157,7 @@ function fetchImageUploadUrlAndShowForm() {
         messageForm.action = imageUploadUrl;
         messageForm.classList.remove('hidden');
       });
+}
+function makeReplyForm(){
+
 }
