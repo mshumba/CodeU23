@@ -44,6 +44,14 @@ public class Datastore {
     messageEntity.setProperty("text", message.getText());
     messageEntity.setProperty("timestamp", message.getTimestamp());
 
+    if(message.getImageUrl() != null) {
+      messageEntity.setProperty("imageUrl", message.getImageUrl());
+    }
+    if(message.getImageUrl() != null) {
+      messageEntity.setProperty("imageLabels", message.getImageLabels());
+    }
+    messageEntity.setProperty("parent",message.getParent());
+
     datastore.put(messageEntity);
   }
 
@@ -82,21 +90,25 @@ public class Datastore {
 
     return messages;
   }
-  private void getMessagesHelper(boolean a, PreparedQuery results,List<Message> messages,String user){
+  private void getMessagesHelper(boolean all, PreparedQuery results,List<Message> messages,String user){
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-
-        if(a){
+        if(all){
           user = (String) entity.getProperty("user");
         }
-
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
-        Message message = new Message(id, user, text, timestamp);
-
+        String imageUrl = (String) entity.getProperty("imageUrl");
+        String imageLabels= (String) entity.getProperty("imageLabels");
+        Message message = new Message(id, user, text, timestamp,imageUrl,imageLabels);
+        String messageParent=(String)entity.getProperty("parent");
+        message.setParent(messageParent);
+        ArrayList<String> responses=(ArrayList)entity.getProperty("child");
+        message.setId(id);
+        message.setChildrenArray(responses);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
