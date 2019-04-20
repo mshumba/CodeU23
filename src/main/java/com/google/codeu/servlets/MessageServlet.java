@@ -53,6 +53,7 @@ import java.util.stream.Collectors;
 
 
 import org.jsoup.safety.Whitelist;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
 /** Handles fetching and saving {@link Message} instances. */
 @WebServlet("/messages")
@@ -73,7 +74,6 @@ public class MessageServlet extends HttpServlet {
     response.setContentType("application/json");
 
     String user = request.getParameter("user");
-
     if (user == null || user.equals("")) {
       // Request is invalid, return empty array
       response.getWriter().println("[]");
@@ -101,24 +101,36 @@ public class MessageServlet extends HttpServlet {
 
     String user = userService.getCurrentUser().getEmail();
 
-  /*  BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    List<BlobKey> blobKeys = blobs.get("image");
-*/
-    BlobstoreService blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
-    Map<String, List<BlobKey>> blobs = blobstoreService.getUploads(request);
-    List<BlobKey> blobKeys = blobs.get("image");
 
 
     String userText = Jsoup.clean(request.getParameter("text"), Whitelist.none());
 
-    /*String regex = "(https?://(\\w+[/|.|-]?)+\\.(bmp|png|jpg|gif|jpeg|tiff)).*";*/
     String regex = "(https?://\\S+\\.(png|jpg))";
     String replacement = "<img src=\"$1\" />";
     String textWithImagesReplaced = userText.replaceAll(regex, replacement);
 
     Message message = new Message(user, textWithImagesReplaced);
 
+    BlobstoreService blobstoreService;
+    Map<String, List<BlobKey>> blobs;
+    List<BlobKey> blobKeys=null;
+    if(request.getQueryString()==null) {
+       blobstoreService = BlobstoreServiceFactory.getBlobstoreService();
+       blobs = blobstoreService.getUploads(request);
+       blobs.get("image");
+    }
+    else{
+      message.setParent(request.getQueryString().substring(7));
+      List<Message> searching =datastore.getAllMessages();
+      for(Message m: searching){
+        if(m.getId().toString().equals(message.getParent())){
+          m.addChild(message.getText());
+        }
+      }
+      datastore.storeMessage(message);
+      response.sendRedirect("/user-page.html?user=" + user);
+      return;
+    }
     if(blobKeys != null && !blobKeys.isEmpty()) {
       BlobKey blobKey = blobKeys.get(0);
 
@@ -133,18 +145,14 @@ public class MessageServlet extends HttpServlet {
         blobstoreService.delete(blobKey);
       }
 
+      byte[] blobBytes = getBlobBytes(blobstoreService, blobKey);
+      String imageLabels = getImageLabels(blobBytes);
+      message.setImageLabels(imageLabels);
       datastore.storeMessage(message);
       response.sendRedirect("/user-page.html?user=" + user);
       return;
     }
-    /*
-    Trying to set it up so we can do it with images posted with the link
 
-    byte[] blobBytes = getBlobBytes(blobstoreService, blobKey);
-    String imageLabels = getImageLabels(blobBytes);
-    message.setImageLabels(imageLabels);
-    datastore.storeMessage(message);
-*/
     datastore.storeMessage(message);
     response.sendRedirect("/user-page.html?user=" + user);
   }

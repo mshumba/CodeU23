@@ -29,6 +29,8 @@ public class Message {
   private String imageUrl;
   private String imageLabels;
   private long timestamp;
+  public String parent;
+  public ArrayList<String> child;
   /**
    * Constructs a new {@link Message} posted by {@code user} with {@code text} content. Generates a
    * random ID and uses the current system time for the creation time.
@@ -50,11 +52,14 @@ public class Message {
     this.timestamp = timestamp;
     this.imageUrl=imageUrl;
     this.imageLabels=imageLabels;
+    this.parent=null;
+    this.child=new ArrayList<>();
   }
 
   public UUID getId() {
     return id;
   }
+  public void setId(UUID a){this.id=a;}
   @Override
   public String toString(){
     String ret="";
@@ -74,5 +79,24 @@ public class Message {
   public void setImageUrl(String newUrl){this.imageUrl=newUrl;}
   public void setImageLabels(String labels){this.imageLabels=labels;}
   public String getImageLabels(){return imageLabels;}
+  public void setParent(String parent){
+    this.parent=parent;
+  }
+  public String getParent(){
+    return parent;
+  }
 
-}
+  public void addChild(String children){
+    child.add(children);
+  }
+  public ArrayList getChild(){return child;}
+  public void setChildrenArray(ArrayList<String> a){
+    for(String m: a){
+      child.add(m);
+    }
+
+  }
+
+  }
+
+
