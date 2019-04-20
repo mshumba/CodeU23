@@ -61,12 +61,44 @@ function fetchMessages() {
           messagesContainer.innerHTML = '';
         }
         messages.forEach((message) => {
+        if(message.parent==null) {
           const messageDiv = buildMessageDiv(message);
           messagesContainer.appendChild(messageDiv);
-
+          }
+          else{
+          var par=message.parent;
+          var resp=message.text;
+           messages.forEach((message) => {
+           if(message.id===par){
+           console.log('I will implement this feature later');
+           }
+                  });
+          }
         });
       });
 }
+
+
+
+
+
+
+/*
+if(message.parent==null){
+messages.forEach((message2) => {
+if(message2.id.toString()==message.parent){
+console.log(message2.id.toString());
+console.log(message.parent);
+console.log("found the parent");
+}
+
+
+});
+}
+*/
+
+
+
 
 
 function buildResponseDiv(){
@@ -97,24 +129,22 @@ function buildMessageDiv(message) {
 
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message-div');
+
   messageDiv.appendChild(headerDiv);
   messageDiv.appendChild(bodyDiv);
+
+  messageDiv.appendChild(buildReplyForm(message));
 if(message.imageUrl){
   bodyDiv.innerHTML += '<br/>';
   bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
 }
+
+
 if(message.imageLabels){
   bodyDiv.innerHTML += '<br/>';
   bodyDiv.innerHTML += message.imageLabels;
+  console.log(message.imageLabels);
 }
-    const responseDiv = document.createElement('div');
-    responseDiv.classList.add('response-div');
-    responseDiv.innerHTML+= '<div ng-app="">';
-        responseDiv.innerHTML+='<hr>'
-        responseDiv.innerHTML+='<b>New Message</b><br/>';
-        responseDiv.innerHTML+='<input ng-model="Comment" Style="width:40%;display:inline-block;" class="form-control" placeholder="Write Your Name.. " />';
-        responseDiv.innerHTML+='<button class="btn btn-danger">Add Comment</button>';
-      messageDiv.appendChild(responseDiv);
   return messageDiv;
 }
 
@@ -158,6 +188,22 @@ function fetchImageUploadUrlAndShowForm() {
         messageForm.classList.remove('hidden');
       });
 }
-function makeReplyForm(){
+function buildReplyForm(message) {
+  const textArea = document.createElement('textarea');
+  textArea.name = 'text';
 
+  const linebreak = document.createElement('br');
+
+  const input = document.createElement('input');
+  input.type = 'submit';
+  input.value = 'Submit';
+
+  const replyForm = document.createElement('form');
+  replyForm.action = '/messages?parent=' + message.id.toString();
+  replyForm.method = 'POST';
+  replyForm.appendChild(textArea);
+  replyForm.appendChild(linebreak);
+  replyForm.appendChild(input);
+
+  return replyForm;
 }
