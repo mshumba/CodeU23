@@ -36,6 +36,6 @@ public class SignUpServlet extends HttpServlet {
     HttpSession session = request.getSession();
     datastore.storeUser(user,(String)session.getAttribute("token"));
     session.setAttribute("login",true);
-    response.sendRedirect("/feed");
+    response.sendRedirect("/feed.html");
   }
 }
