@@ -30,12 +30,18 @@ public class SignUpServlet extends HttpServlet {
     }
   }
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException{
-    User user = new User(request.getParameter("userName"),request.getParameter("email")
+    HttpSession session = request.getSession();
+    User user = new User(request.getParameter("userName"),(String)session.getAttribute("email")
     ,request.getParameter("gender"),request.getParameter("birthday"),request.getParameter("description"));
 
-    HttpSession session = request.getSession();
-    datastore.storeUser(user,(String)session.getAttribute("token"));
-    session.setAttribute("login",true);
-    response.sendRedirect("/feed");
+    if(session.getAttribute("token") == null){
+      response.sendRedirect("/login");
+    }
+    else{
+      datastore.storeUser(user,(String)session.getAttribute("token"));
+      session.setAttribute("login",true);
+      response.sendRedirect("/");
+    }
+
   }
 }

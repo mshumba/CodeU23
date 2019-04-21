@@ -19,6 +19,8 @@ package com.google.codeu.servlets;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.google.gson.JsonObject;
+import com.google.codeu.service.Session;
+import com.google.codeu.data.User;
 
 import java.io.IOException;
 import javax.servlet.annotation.WebServlet;
@@ -31,21 +33,23 @@ import javax.servlet.http.HttpServletResponse;
  */
 @WebServlet("/login-status")
 public class LoginStatusServlet extends HttpServlet {
-
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
     JsonObject jsonObject = new JsonObject();
-
-    UserService userService = UserServiceFactory.getUserService();
-    if (userService.isUserLoggedIn()) {
+    Session session = new Session();
+    if(session.isLoggedIn(request,response)){
+      User user = session.getCurrentUser(request,response);
       jsonObject.addProperty("isLoggedIn", true);
-      jsonObject.addProperty("username", userService.getCurrentUser().getEmail());
-    } else {
-      jsonObject.addProperty("isLoggedIn", false);
+      jsonObject.addProperty("username", (String)request.getSession().getAttribute("email"));
     }
+    else{
+      jsonObject.addProperty("isLoggedIn", false);
 
+    }
     response.setContentType("application/json");
     response.getWriter().println(jsonObject.toString());
+
+
   }
 }

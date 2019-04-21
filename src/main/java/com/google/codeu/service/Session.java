@@ -1,3 +1,5 @@
+package com.google.codeu.service;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -7,11 +9,8 @@ import com.google.codeu.data.User;
 
 
 public class Session{
-  private Datastore datastore;
+  private Datastore datastore = new Datastore();
 
-  public void init(){
-    datastore=new Datastore();
-  }
   public boolean isLoggedIn(HttpServletRequest request, HttpServletResponse response) throws IOException{
     if(request.getSession().getAttribute("login") != null && ((Boolean)request.getSession().getAttribute("login")).booleanValue()){
       return true;
