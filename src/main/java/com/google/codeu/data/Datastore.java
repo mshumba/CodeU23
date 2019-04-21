@@ -24,6 +24,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+ import com.google.appengine.api.datastore.KeyFactory.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -146,5 +148,73 @@ public class Datastore {
     markerEntity.setProperty("lng", marker.getLng());
     markerEntity.setProperty("content", marker.getContent());
     datastore.put(markerEntity);
+  }
+
+  //for log in
+  //return user identified by the user name. User name is unique throught out the whole site
+  public boolean checkUserNameExist(String userName){
+    Query q = new Query("User").setFilter(new Query.FilterPredicate("userName", FilterOperator.EQUAL, userName));
+    PreparedQuery results = datastore.prepare(q);
+    if(results.countEntities(FetchOptions.Builder.withLimit(1000)) > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public List<User> findUserBy(String field, String value){
+    Query q = new Query("User").setFilter(new Query.FilterPredicate(field, FilterOperator.EQUAL, value));
+    PreparedQuery results = datastore.prepare(q);
+    ArrayList<User> result = new ArrayList<>();
+    try{
+      for(Entity entity : results.asIterable()){
+        String userName = (String) entity.getProperty("userName");
+        String gender = (String) entity.getProperty("gender");
+        String birthday = (String) entity.getProperty("birthday");
+        String description = (String) entity.getProperty("description");
+        String email = (String) entity.getProperty("email");
+        result.add(new User(userName, email,gender, birthday, description));
+      }
+    }
+    catch (Exception e) {
+      System.err.println("Error finding user by field.");
+      e.printStackTrace();
+    }
+    return result;
+  }
+  public void storeUser(User user,String token){
+    Entity e  = new Entity("User",token);
+    e.setProperty("email",user.getEmail());
+    e.setProperty("userName",user.getUserName());
+    e.setProperty("birthday",user.getBirthday());
+    e.setProperty("description",user.getDescription());
+    e.setProperty("gender",user.getGender());
+    datastore.put(e);
+  }
+  public boolean userExists(String key){
+    try{
+      datastore.get(new Builder("User",key).getKey());
+      return true;
+    }
+    catch(Exception e){
+      return false;
+    }
+  }
+  public User getCurrentUser(String key){
+    try{
+      Entity entity = datastore.get(new Builder("User",key).getKey());
+      String userName = (String) entity.getProperty("userName");
+      String gender = (String) entity.getProperty("gender");
+      String birthday = (String) entity.getProperty("birthday");
+      String description = (String) entity.getProperty("description");
+      String email = (String) entity.getProperty("email");
+      return new User(userName, email,gender, birthday, description);
+    }
+    catch(Exception e){
+      System.err.println(e);
+      return null;
+    }
+
   }
 }
