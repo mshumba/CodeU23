@@ -106,9 +106,9 @@ public class Datastore {
         Message message = new Message(id, user, text, timestamp,imageUrl,imageLabels);
         String messageParent=(String)entity.getProperty("parent");
         message.setParent(messageParent);
-        ArrayList<String> responses=(ArrayList)entity.getProperty("child");
+        //ArrayList<String> responses=(ArrayList)entity.getProperty("child");
         message.setId(id);
-        message.setChildrenArray(responses);
+     //   message.setChildrenArray(responses);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
