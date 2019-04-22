@@ -70,7 +70,6 @@ function fetchMessages() {
           var resp=message.text;
            messages.forEach((message) => {
            if(message.id===par){
-           console.log('I will implement this feature later');
            }
                   });
           }
@@ -144,6 +143,18 @@ if(message.imageLabels){
   bodyDiv.innerHTML += '<br/>';
   bodyDiv.innerHTML += message.imageLabels;
   console.log(message.imageLabels);
+}
+if(message.child){
+bodyDiv.innerHTML+='<hr>'
+for(i=0;i<message.child.length;i++){
+var cur=i+1;
+bodyDiv.innerHTML+=cur+':';
+bodyDiv.innerHTML+='<br>';
+bodyDiv.innerHTML+=message.child[i];
+bodyDiv.innerHTML+='<br>';
+}
+   bodyDiv.innerHTML += '<br/>';
+ //  bodyDiv.innerHTML+=message.child.get(0);
 }
   return messageDiv;
 }

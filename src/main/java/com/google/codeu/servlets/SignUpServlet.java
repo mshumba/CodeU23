@@ -33,14 +33,14 @@ public class SignUpServlet extends HttpServlet {
     HttpSession session = request.getSession();
     User user = new User(request.getParameter("userName"),(String)session.getAttribute("email")
     ,request.getParameter("gender"),request.getParameter("birthday"),request.getParameter("description"));
-
+    
     if(session.getAttribute("token") == null){
       response.sendRedirect("/login");
     }
     else{
       datastore.storeUser(user,(String)session.getAttribute("token"));
       session.setAttribute("login",true);
-      response.sendRedirect("/");
+      response.sendRedirect("/feed.html");
     }
 
   }
