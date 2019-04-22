@@ -61,12 +61,57 @@ function fetchMessages() {
           messagesContainer.innerHTML = '';
         }
         messages.forEach((message) => {
+        if(message.parent==null) {
           const messageDiv = buildMessageDiv(message);
           messagesContainer.appendChild(messageDiv);
+          }
+          else{
+          var par=message.parent;
+          var resp=message.text;
+           messages.forEach((message) => {
+           if(message.id===par){
+           console.log('I will implement this feature later');
+           }
+                  });
+          }
         });
       });
 }
 
+
+
+
+
+
+/*
+if(message.parent==null){
+messages.forEach((message2) => {
+if(message2.id.toString()==message.parent){
+console.log(message2.id.toString());
+console.log(message.parent);
+console.log("found the parent");
+}
+
+
+});
+}
+*/
+
+
+
+
+
+function buildResponseDiv(){
+/*
+<label>Reply:</label>
+<input type="text" ng-model="yourMessage" placeholder="Reply to the above message" id="replyBox">
+<br>
+Add an image to your response:
+<input type="file" name="image">
+<br>
+<input type="submit" value="Reply" onclick="msg()">
+*/
+}
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -84,15 +129,81 @@ function buildMessageDiv(message) {
 
   const messageDiv = document.createElement('div');
   messageDiv.classList.add('message-div');
+
   messageDiv.appendChild(headerDiv);
   messageDiv.appendChild(bodyDiv);
 
+  messageDiv.appendChild(buildReplyForm(message));
+if(message.imageUrl){
+  bodyDiv.innerHTML += '<br/>';
+  bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
+}
+
+
+if(message.imageLabels){
+  bodyDiv.innerHTML += '<br/>';
+  bodyDiv.innerHTML += message.imageLabels;
+  console.log(message.imageLabels);
+}
   return messageDiv;
 }
+
 
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
   setPageTitle();
   showMessageFormIfViewingSelf();
   fetchMessages();
+}
+/**
+ * Shows the message form if the user is logged in and viewing their own page.
+ */
+function showMessageFormIfViewingSelf() {
+  fetch('/login-status')
+      .then((response) => {
+        return response.json();
+      })
+      .then((loginStatus) => {
+        if (loginStatus.isLoggedIn &&
+            loginStatus.username == parameterUsername) {
+          fetchImageUploadUrlAndShowForm();
+        }
+      });
+      reply_message();
+}
+
+function reply_message(id, sender){
+    console.log('Message id: '+id);
+    console.log('Reply to: '+sender);
+}
+
+function fetchImageUploadUrlAndShowForm() {
+  fetch('/image-upload-url')
+      .then((response) => {
+        return response.text();
+      })
+      .then((imageUploadUrl) => {
+        const messageForm = document.getElementById('message-form');
+        messageForm.action = imageUploadUrl;
+        messageForm.classList.remove('hidden');
+      });
+}
+function buildReplyForm(message) {
+  const textArea = document.createElement('textarea');
+  textArea.name = 'text';
+
+  const linebreak = document.createElement('br');
+
+  const input = document.createElement('input');
+  input.type = 'submit';
+  input.value = 'Submit';
+
+  const replyForm = document.createElement('form');
+  replyForm.action = '/messages?parent=' + message.id.toString();
+  replyForm.method = 'POST';
+  replyForm.appendChild(textArea);
+  replyForm.appendChild(linebreak);
+  replyForm.appendChild(input);
+
+  return replyForm;
 }

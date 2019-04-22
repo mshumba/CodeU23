@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--Import Google Icon Font-->
+     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="stylesheet" href="/css/main.css">
+  <script src='./js/sign-up-loader.js'></script>
+  <title> Sign Up</title>
+</head>
+<body>
+
+  <nav style='width:100%'>
+  <div class="nav-wrapper teal lighten-2">
+    <a href="#" class="brand-logo">Virtual Resort</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/feed.html">Feed</a></li>
+      <li><a href="/login.html">Log in</a></li>
+    </ul>
+  </div>
+</nav>
+
+  <div class="row" >
+    <form class="col s12" action='/signup' method='POST'>
+      <div class="row">
+        <div class="input-field col s12">
+          <input placeholder="Must be unqiue" name = "userName" id="userName" type="text" class="validate">
+          <label for="userName">User Name</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="gender" name = "gender" type="text" class="validate">
+          <label for="gender">Gender</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="birthday" type="date" class="validate">
+          <label for="birthday">Birthday</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <input id="email" type="email" class="validate">
+          <label for="email">email</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <textarea id="textarea1" class="materialize-textarea"></textarea>
+         <label for="description">Description</label>
+        </div>
+      </div>
+      <div class='row'>
+        <button class="btn waves-effect waves-light" style="margin-left: 40%" type="submit" name="action">Submit
+          <i class="material-icons right">send</i>
+        </button>
+      </div>
+    </form>
+  </div>
+</body>
+<!-- Compiled and minified CSS -->
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+
+   <!-- Compiled and minified JavaScript -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+   </html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <link rel="stylesheet" href="/css/main.css">
+  <meta name="google-signin-scope" content="profile email">
+  <meta name="google-signin-client_id" content="550598076096-aspc8bn67u9mise7behih94dff9t1tar.apps.googleusercontent.com">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <title> Log in</title>
+</head>
+<body>
+  <nav style='width:100%'>
+  <div class="nav-wrapper teal lighten-2">
+    <a href="#" class="brand-logo">Virtual Resort</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li><a href="/index.html">Home</a></li>
+      <li><a href="/feed.html">Feed</a></li>
+      <li><a href="/login.html">Log in</a></li>
+    </ul>
+  </div>
+</nav>
+  <p>
+    To log in/ Sign up, please log in with your google account first.
+  </p>
+  <div style="margin-left:40%">
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+  </div>
+</body>
+
+<script src="https://apis.google.com/js/platform.js?onload=init" async defer></script>
+<script src='/js/oauth.js' async defer></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+<!-- Compiled and minified JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+</html>
