@@ -53,7 +53,7 @@ public class Message {
     this.imageUrl=imageUrl;
     this.imageLabels=imageLabels;
     this.parent=null;
-    this.child=new ArrayList<String>();
+    this.child=new ArrayList<>();
   }
 
   public UUID getId() {
@@ -89,27 +89,13 @@ public class Message {
   public void addChild(String children){
     child.add(children);
   }
-  public ArrayList<String> getChild(){
-    return child;
-  }
+  public ArrayList getChild(){return child;}
   public void setChildrenArray(ArrayList<String> a){
-    if(a==null||a.isEmpty()){
-      return;
-    }
     for(String m: a){
       child.add(m);
     }
 
   }
-  public void printMyChildren(){
-    if(this.child==null){
-      return;
-    }
-    for(String c: this.child){
-      //System.out.println(c);
-    }
-  }
-
 
   }
 
