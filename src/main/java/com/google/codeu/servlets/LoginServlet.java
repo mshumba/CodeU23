@@ -18,6 +18,7 @@
 package com.google.codeu.servlets;
 
 import com.google.appengine.api.users.UserService;
+import com.google.codeu.service.Session;
 import com.google.appengine.api.users.UserServiceFactory;
 import java.io.IOException;
 import javax.servlet.http.HttpSession;
@@ -52,16 +53,21 @@ public class LoginServlet extends HttpServlet {
 
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
       HttpSession session = request.getSession();
-      if(session.getAttribute("login") != null){
-        response.sendRedirect("/feed");
+      Session s = new Session();
+      if(session.getAttribute("login")!= null && ((Boolean)session.getAttribute("login")).booleanValue()){
+        response.sendRedirect("/");
         return;
       }
       String token = request.getParameter("token");
+      String email= request.getParameter("email");
       session.setAttribute("token",token);
+      session.setAttribute("email",email);
 
       if(datastore.userExists(token)){
         session.setAttribute("login",new Boolean(true));
-        response.sendRedirect("/feed");
+        System.out.println(email);
+
+        response.sendRedirect("/");
       }
       else{
         response.sendRedirect("/signup");
