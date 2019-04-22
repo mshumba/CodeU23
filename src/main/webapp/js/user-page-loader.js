@@ -151,7 +151,7 @@ var cur=i+1;
 bodyDiv.innerHTML+=cur+':';
 bodyDiv.innerHTML+='<br>';
 bodyDiv.innerHTML+=message.child[i];
-odyDiv.innerHTML+='<br>';
+bodyDiv.innerHTML+='<br>';
 }
    bodyDiv.innerHTML += '<br/>';
  //  bodyDiv.innerHTML+=message.child.get(0);
