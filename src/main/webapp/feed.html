@@ -4,7 +4,7 @@
     <title>Message Feed</title>
     <link rel="stylesheet" href="/css/main.css">
     <link rel="stylesheet" href="/css/user-page.css">
-
+    <script src="/js/navigation-loader.js"></script>
     <script>
 
   // Fetch messages and add them to the page.
@@ -27,40 +27,72 @@
     });
   }
 
-  function buildMessageDiv(message){
-   const usernameDiv = document.createElement('div');
-   usernameDiv.classList.add("left-align");
-   usernameDiv.appendChild(document.createTextNode(message.user));
+ function buildMessageDiv(message) {
+  const headerDiv = document.createElement('div');
+  headerDiv.classList.add('message-header');
+  headerDiv.appendChild(document.createTextNode(
+      message.user + ' - ' + new Date(message.timestamp)));
 
-   const timeDiv = document.createElement('div');
-   timeDiv.classList.add('right-align');
-   timeDiv.appendChild(document.createTextNode(new Date(message.timestamp)));
+  const bodyDiv = document.createElement('div');
+  bodyDiv.classList.add('message-body');
+  bodyDiv.innerHTML = message.text;
 
-   const headerDiv = document.createElement('div');
-   headerDiv.classList.add('message-header');
-   headerDiv.appendChild(usernameDiv);
-   headerDiv.appendChild(timeDiv);
+  const messageDiv = document.createElement('div');
+  messageDiv.classList.add('message-div');
 
-   const bodyDiv = document.createElement('div');
-   bodyDiv.classList.add('message-body');
-   bodyDiv.appendChild(document.createTextNode(message.text));
+  messageDiv.appendChild(headerDiv);
+  messageDiv.appendChild(bodyDiv);
 
-   if(message.imageUrl){
+  messageDiv.appendChild(buildReplyForm(message));
+if(message.imageUrl){
   bodyDiv.innerHTML += '<br/>';
   bodyDiv.innerHTML += '<img src="' + message.imageUrl + '" />';
 }
-   const messageDiv = document.createElement('div');
-   messageDiv.classList.add("message-div");
-   messageDiv.appendChild(headerDiv);
-   messageDiv.appendChild(bodyDiv);
 
-   return messageDiv;
-  }
 
+if(message.imageLabels){
+  bodyDiv.innerHTML += '<br/>';
+  bodyDiv.innerHTML += message.imageLabels;
+  console.log(message.imageLabels);
+}
+if(message.child){
+bodyDiv.innerHTML+='<hr>'
+for(i=0;i<message.child.length;i++){
+var cur=i+1;
+bodyDiv.innerHTML+='<br>';
+//bodyDiv.innerHTML+='There are '+message.child.length+' responses to this message';
+bodyDiv.innerHTML+=message.child[i];
+bodyDiv.innerHTML+='<br>';
+}
+   bodyDiv.innerHTML += '<br/>';
+ //  bodyDiv.innerHTML+=message.child.get(0);
+}
+  return messageDiv;
+}
   // Fetch data and populate the UI of the page.
   function buildUI(){
    fetchMessages();
   }
+  function buildReplyForm(message) {
+  const textArea = document.createElement('textarea');
+  textArea.name = 'text';
+
+  const linebreak = document.createElement('br');
+
+  const input = document.createElement('input');
+  input.type = 'submit';
+  input.value = 'Submit';
+
+  const replyForm = document.createElement('form');
+  replyForm.action = '/messages?larent=' + message.id.toString();
+  replyForm.method = 'POST';
+  replyForm.appendChild(textArea);
+  replyForm.appendChild(linebreak);
+  replyForm.appendChild(input);
+
+  return replyForm;
+}
+
 </script>
 </head>
 <body onload="buildUI()">

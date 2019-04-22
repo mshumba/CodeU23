@@ -97,7 +97,8 @@ public class MessageServlet extends HttpServlet {
       response.sendRedirect("/index.html");
       return;
     }
-
+    System.out.println(request.getQueryString());
+   // System.out.println("!!!!!!!MUFARO!!!!!");
     String user = userService.getCurrentUser().getEmail();
 
 
@@ -130,7 +131,14 @@ public class MessageServlet extends HttpServlet {
       }
 
       datastore.storeMessage(message);
-      response.sendRedirect("/user-page.html?user=" + user);
+
+      System.out.println(request.getQueryString());
+      if(request.getQueryString().charAt(0)=='p'){
+        response.sendRedirect("/user-page.html?user=" + user);
+      }
+      else if (request.getQueryString().charAt(0)=='l'){
+        response.sendRedirect("/feed.html");
+      }
       return;
     }
     if(blobKeys != null && !blobKeys.isEmpty()) {

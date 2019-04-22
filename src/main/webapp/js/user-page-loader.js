@@ -148,8 +148,8 @@ if(message.child){
 bodyDiv.innerHTML+='<hr>'
 for(i=0;i<message.child.length;i++){
 var cur=i+1;
-bodyDiv.innerHTML+=cur+':';
 bodyDiv.innerHTML+='<br>';
+//bodyDiv.innerHTML+='There are '+message.child.length+' responses to this message';
 bodyDiv.innerHTML+=message.child[i];
 bodyDiv.innerHTML+='<br>';
 }
