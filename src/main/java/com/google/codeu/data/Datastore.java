@@ -26,6 +26,7 @@ import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
  import com.google.appengine.api.datastore.KeyFactory.Builder;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -213,6 +214,32 @@ public class Datastore {
     catch(Exception e){
       return false;
     }
+  }
+  public ArrayList<User> getAllUsers(){
+    ArrayList<User> ourUsers=new ArrayList<>();
+    Query query = new Query("Users").addSort("userName");
+    PreparedQuery results = datastore.prepare(query);
+    for(Entity entity: results.asIterable()){
+      try {
+        String idString = entity.getKey().getName();
+       // UUID id = UUID.fromString(idString);
+
+       //Entity entity = datastore.get(new Builder("User",key).getKey());
+        String userName = (String) entity.getProperty("userName");
+        String gender = (String) entity.getProperty("gender");
+        String birthday = (String) entity.getProperty("birthday");
+        String description = (String) entity.getProperty("description");
+        String email = (String) entity.getProperty("email");
+        //System.out.println(responses);
+        User use=new User(userName,email,gender,birthday,description);
+        ourUsers.add(use);
+      } catch (Exception e) {
+        System.err.println("Error reading message.");
+        System.err.println(entity.toString());
+        e.printStackTrace();
+      }
+    }
+    return ourUsers;
   }
   public User getCurrentUser(String key){
     try{

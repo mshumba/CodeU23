@@ -1,6 +1,8 @@
 package com.google.codeu.data;
 
 
+import java.util.ArrayList;
+
 /** A single message posted by a user. */
 public class User{
 
@@ -9,7 +11,7 @@ public class User{
   private String email;
   private String birthday;
   private String description;
-
+  private Datastore datastore;
 
   public User(String userName, String email, String gender, String birthday, String description) {
     this.userName = userName;
@@ -27,6 +29,16 @@ public class User{
 		return userName;
 	}
 
+	public User getUserFromEmail(String email){
+		ArrayList<User> use = datastore.getAllUsers();
+		for(User u:use){
+			if(u.getEmail().equals(email)){
+				return u;
+		}
+		}
+
+		return null;
+	}
 	/**
 	* Sets new value of userName
 	* @param

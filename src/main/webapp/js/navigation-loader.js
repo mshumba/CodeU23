@@ -46,7 +46,7 @@ function addLoginOrLogoutLinkToNavigation() {
 
       });
 }
-
+q2
 /**
  * Creates an li element.
  * @param {Element} childElement

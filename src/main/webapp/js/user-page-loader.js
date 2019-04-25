@@ -33,17 +33,23 @@ function setPageTitle() {
  * Shows the message form if the user is logged in and viewing their own page.
  */
 function showMessageFormIfViewingSelf() {
-  fetch('/login-status')
-      .then((response) => {
+console.log(parameterUsername);
+currentUser=User.getUserFromEmail(parameterUsername);
+if(currentUser.isLoggedIn()){
+     then((response) => {
         return response.json();
-      })
-      .then((loginStatus) => {
-        if (loginStatus.isLoggedIn &&
-            loginStatus.username == parameterUsername) {
-          const messageForm = document.getElementById('message-form');
-          messageForm.classList.remove('hidden');
-        }
-      });
+      })  .then((loginStatus) => {
+                if (loginStatus.isLoggedIn &&
+                    loginStatus.username == parameterUsername) {
+                    return response.json;
+                  const messageForm = document.getElementById('message-form');
+                  messageForm.classList.remove('hidden');
+                }
+              });
+}
+
+
+
 }
 
 /** Fetches messages and add them to the page. */
@@ -80,37 +86,6 @@ function fetchMessages() {
 
 
 
-
-
-/*
-if(message.parent==null){
-messages.forEach((message2) => {
-if(message2.id.toString()==message.parent){
-console.log(message2.id.toString());
-console.log(message.parent);
-console.log("found the parent");
-}
-
-
-});
-}
-*/
-
-
-
-
-
-function buildResponseDiv(){
-/*
-<label>Reply:</label>
-<input type="text" ng-model="yourMessage" placeholder="Reply to the above message" id="replyBox">
-<br>
-Add an image to your response:
-<input type="file" name="image">
-<br>
-<input type="submit" value="Reply" onclick="msg()">
-*/
-}
 /**
  * Builds an element that displays the message.
  * @param {Message} message
@@ -148,8 +123,8 @@ if(message.child){
 bodyDiv.innerHTML+='<hr>'
 for(i=0;i<message.child.length;i++){
 var cur=i+1;
-bodyDiv.innerHTML+=cur+':';
 bodyDiv.innerHTML+='<br>';
+//bodyDiv.innerHTML+='There are '+message.child.length+' responses to this message';
 bodyDiv.innerHTML+=message.child[i];
 bodyDiv.innerHTML+='<br>';
 }
@@ -162,15 +137,16 @@ bodyDiv.innerHTML+='<br>';
 
 /** Fetches data and populates the UI of the page. */
 function buildUI() {
+
   setPageTitle();
   showMessageFormIfViewingSelf();
   fetchMessages();
 }
 /**
  * Shows the message form if the user is logged in and viewing their own page.
- */
+ *
 function showMessageFormIfViewingSelf() {
-  fetch('/login-status')
+  fetch('/login')
       .then((response) => {
         return response.json();
       })
@@ -180,9 +156,8 @@ function showMessageFormIfViewingSelf() {
           fetchImageUploadUrlAndShowForm();
         }
       });
-      reply_message();
 }
-
+*/
 function reply_message(id, sender){
     console.log('Message id: '+id);
     console.log('Reply to: '+sender);
