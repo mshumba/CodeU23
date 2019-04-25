@@ -50,7 +50,7 @@ import java.io.*;
 
 import java.util.stream.Collectors;
 
-
+import com.google.codeu.service.Session;
 import org.jsoup.safety.Whitelist;
 import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 
@@ -69,6 +69,7 @@ public class MessageServlet extends HttpServlet {
    */
   @Override
   public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Session session = new Session();
 
     response.setContentType("application/json");
 
@@ -91,16 +92,16 @@ public class MessageServlet extends HttpServlet {
    */
   @Override
   public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    Session session = new Session();
 
-    UserService userService = UserServiceFactory.getUserService();
-    if (!userService.isUserLoggedIn()) {
+    //UserService userService = UserServiceFactory.getUserService();
+    if (session.isLoggedIn(request,response)==false) {
       response.sendRedirect("/index.html");
       return;
     }
-    System.out.println(request.getQueryString());
-   // System.out.println("!!!!!!!MUFARO!!!!!");
-    String user = userService.getCurrentUser().getEmail();
 
+  //  String user = userService.getCurrentUser().getEmail();
+    String user = session.getCurrentUser(request,response).getUserName();
 
 
     String userText = Jsoup.clean(request.getParameter("text"), Whitelist.none());

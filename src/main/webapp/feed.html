@@ -21,8 +21,10 @@
        messageContainer.innerHTML = '';
       }
       messages.forEach((message) => {
+      if(message.parent==null){
        const messageDiv = buildMessageDiv(message);
        messageContainer.appendChild(messageDiv);
+       }
       });
     });
   }
@@ -95,7 +97,7 @@ bodyDiv.innerHTML+='<br>';
 
 </script>
 </head>
-<body onload="buildUI()">
+<body onload="buildUI();">
 <div id="content">
     <h1>Message Feed</h1>
     <hr/>
