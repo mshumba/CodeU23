@@ -24,6 +24,8 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.SortDirection;
 import com.google.appengine.api.datastore.FetchOptions;
+ import com.google.appengine.api.datastore.KeyFactory.Builder;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -43,6 +45,14 @@ public class Datastore {
     messageEntity.setProperty("user", message.getUser());
     messageEntity.setProperty("text", message.getText());
     messageEntity.setProperty("timestamp", message.getTimestamp());
+
+    if(message.getImageUrl() != null) {
+      messageEntity.setProperty("imageUrl", message.getImageUrl());
+    }
+    if(message.getImageUrl() != null) {
+      messageEntity.setProperty("imageLabels", message.getImageLabels());
+    }
+    messageEntity.setProperty("parent",message.getParent());
 
     datastore.put(messageEntity);
   }
@@ -81,21 +91,25 @@ public class Datastore {
 
     return messages;
   }
-  private void getMessagesHelper(boolean a, PreparedQuery results,List<Message> messages,String user){
+  private void getMessagesHelper(boolean all, PreparedQuery results,List<Message> messages,String user){
 
     for (Entity entity : results.asIterable()) {
       try {
         String idString = entity.getKey().getName();
         UUID id = UUID.fromString(idString);
-
-        if(a){
+        if(all){
           user = (String) entity.getProperty("user");
         }
-
         String text = (String) entity.getProperty("text");
         long timestamp = (long) entity.getProperty("timestamp");
-        Message message = new Message(id, user, text, timestamp);
-
+        String imageUrl = (String) entity.getProperty("imageUrl");
+        String imageLabels= (String) entity.getProperty("imageLabels");
+        Message message = new Message(id, user, text, timestamp,imageUrl,imageLabels);
+        String messageParent=(String)entity.getProperty("parent");
+        message.setParent(messageParent);
+        //ArrayList<String> responses=(ArrayList)entity.getProperty("child");
+        message.setId(id);
+     //   message.setChildrenArray(responses);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
@@ -103,5 +117,103 @@ public class Datastore {
         e.printStackTrace();
       }
     }
+  }
+  public List<UserMarker> getMarkers() {
+    List<UserMarker> markers = new ArrayList<>();
+
+    Query query = new Query("UserMarker");
+    PreparedQuery results = datastore.prepare(query);
+
+    for (Entity entity : results.asIterable()) {
+     try {
+      double lat = (double) entity.getProperty("lat");
+      double lng = (double) entity.getProperty("lng");
+      String content = (String) entity.getProperty("content");
+      System.out.println(content);
+      UserMarker marker = new UserMarker(lat, lng, content);
+      markers.add(marker);
+     } catch (Exception e) {
+      System.err.println("Error reading marker.");
+      System.err.println(entity.toString());
+      e.printStackTrace();
+     }
+    }
+    return markers;
+  }
+
+  public void storeMarker(UserMarker marker) {
+    Entity markerEntity = new Entity("UserMarker");
+    markerEntity.setProperty("lat", marker.getLat());
+    markerEntity.setProperty("lng", marker.getLng());
+    markerEntity.setProperty("content", marker.getContent());
+    datastore.put(markerEntity);
+  }
+
+  //for log in
+  //return user identified by the user name. User name is unique throught out the whole site
+  public boolean checkUserNameExist(String userName){
+    Query q = new Query("User").setFilter(new Query.FilterPredicate("userName", FilterOperator.EQUAL, userName));
+    PreparedQuery results = datastore.prepare(q);
+    if(results.countEntities(FetchOptions.Builder.withLimit(1000)) > 0){
+      return true;
+    }
+    else{
+      return false;
+    }
+  }
+
+  public List<User> findUserBy(String field, String value){
+    Query q = new Query("User").setFilter(new Query.FilterPredicate(field, FilterOperator.EQUAL, value));
+    PreparedQuery results = datastore.prepare(q);
+    ArrayList<User> result = new ArrayList<>();
+    try{
+      for(Entity entity : results.asIterable()){
+        String userName = (String) entity.getProperty("userName");
+        String gender = (String) entity.getProperty("gender");
+        String birthday = (String) entity.getProperty("birthday");
+        String description = (String) entity.getProperty("description");
+        String email = (String) entity.getProperty("email");
+        result.add(new User(userName, email,gender, birthday, description));
+      }
+    }
+    catch (Exception e) {
+      System.err.println("Error finding user by field.");
+      e.printStackTrace();
+    }
+    return result;
+  }
+  public void storeUser(User user,String token){
+    Entity e  = new Entity("User",token);
+    e.setProperty("email",user.getEmail());
+    e.setProperty("userName",user.getUserName());
+    e.setProperty("birthday",user.getBirthday());
+    e.setProperty("description",user.getDescription());
+    e.setProperty("gender",user.getGender());
+    datastore.put(e);
+  }
+  public boolean userExists(String key){
+    try{
+      datastore.get(new Builder("User",key).getKey());
+      return true;
+    }
+    catch(Exception e){
+      return false;
+    }
+  }
+  public User getCurrentUser(String key){
+    try{
+      Entity entity = datastore.get(new Builder("User",key).getKey());
+      String userName = (String) entity.getProperty("userName");
+      String gender = (String) entity.getProperty("gender");
+      String birthday = (String) entity.getProperty("birthday");
+      String description = (String) entity.getProperty("description");
+      String email = (String) entity.getProperty("email");
+      return new User(userName, email,gender, birthday, description);
+    }
+    catch(Exception e){
+      System.err.println(e);
+      return null;
+    }
+
   }
 }
