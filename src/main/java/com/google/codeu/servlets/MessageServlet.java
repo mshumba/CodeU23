@@ -31,6 +31,7 @@ import com.google.codeu.data.Message;
 import com.google.gson.Gson;
 import com.google.protobuf.ByteString;
 
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -123,12 +124,9 @@ public class MessageServlet extends HttpServlet {
       List<Message> searching =datastore.getAllMessages();
       for(Message m: searching){
         if(m.getId().toString().equals(message.getParent())){
-         // System.out.println(m.getText());
           m.addChild(message.getText());
-          datastore.storeMessage(m);
         }
       }
-
       datastore.storeMessage(message);
       response.sendRedirect("/user-page.html?user=" + user);
       return;

@@ -41,7 +41,6 @@ public class Datastore {
 
   /** Stores the Message in Datastore. */
   public void storeMessage(Message message) {
-
     Entity messageEntity = new Entity("Message", message.getId().toString());
     messageEntity.setProperty("user", message.getUser());
     messageEntity.setProperty("text", message.getText());
@@ -54,13 +53,6 @@ public class Datastore {
       messageEntity.setProperty("imageLabels", message.getImageLabels());
     }
     messageEntity.setProperty("parent",message.getParent());
-    ArrayList<String> forChildren=new ArrayList<>();
-    for(String s: message.getChild()){
-      forChildren.add(s);
-    }
-
-    System.out.println("THe size of responses in "+message.getChild().size());
-    messageEntity.setProperty("child", forChildren);
 
     datastore.put(messageEntity);
   }
@@ -115,15 +107,10 @@ public class Datastore {
         String imageLabels= (String) entity.getProperty("imageLabels");
         Message message = new Message(id, user, text, timestamp,imageUrl,imageLabels);
         String messageParent=(String)entity.getProperty("parent");
-        message.setId(id);
         message.setParent(messageParent);
-        ArrayList<String> responses=(ArrayList<String>)entity.getProperty("child");
-        if(responses!=null){
-          message.setChildrenArray(responses);
-
-        }
-        //System.out.println(responses);
-
+        //ArrayList<String> responses=(ArrayList)entity.getProperty("child");
+        message.setId(id);
+     //   message.setChildrenArray(responses);
         messages.add(message);
       } catch (Exception e) {
         System.err.println("Error reading message.");
