@@ -1,4 +1,4 @@
-# codeu-starter-project
+# Spring 2019 CodeU Project
 ## Usage of Datastore
 When retrieving information about usesr:
 
